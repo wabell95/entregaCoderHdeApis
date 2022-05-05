@@ -1,45 +1,46 @@
-import { useEffect, useState } from "react"
+import './App.css';
+import {  useState } from 'react';
 
 const urlApi = "https://restcountries.com/v3.1/all";
-const Paises = () => {
+
+function App() {
+
+  const [paises, setpaises] = useState([]);
+
+  const buscarPaises = async (region) => {
+    const respuesta = await fetch(urlApi);
+    const data = await respuesta.json();
+
+    const result = data.filter(pais => pais.region === region);
+
+    setpaises(result);
+    console.log(result);
+
+  }
+
+  return (
+    <>
+      <h1>Paises</h1>
+      <button onClick={() => buscarPaises("Americas")}>
+        Americas
+      </button>
+      <button onClick={() => buscarPaises("Asia")}>
+        Asia
+      </button>
+      <button onClick={() => buscarPaises("Europe")}>
+        Europe
+      </button>
 
 
-    const [paises, setPaises] = useState([]);
-
-    useEffect(() => {
-        buscarPaises("Americas");
-
-    }, [])
-
-
-
-    const buscarPaises = async (continente) => {
-        //  const urlApi = "https://restcountries.com/v3.1/all";
-        let respuesta = await fetch(urlApi);
-        let respuestaJSON = await respuesta.json();
-        const result = respuestaJSON.filter(pais => pais.region === "Americas");
-        setPaises(result);
-
-
-    }
-    return (<>
-
-        <button onClick={buscarPaises}>America</button>
-        <button onClick={buscarPaises}>Europa</button>
-        <button onClick={buscarPaises}>Asia</button>
-        <div >
-            {paises.map((pais, i) => 
-            
-            <ul>
-                 <li>{pais.name.common}</li>
-                 {/* <img className="card-img-top img-fluid:100%" src={pais.flags.png} alt="bandera de pais"></img> */}
-            </ul>)}
-        </div>
-        
-
-        
+      <div>
+        {
+          paises.map(pais => (
+            <h2 >{pais.name.common}</h2>
+          ))
+        }
+      </div>
     </>
-    )
-
+  );
 }
-export default Paises
+
+export default App;
